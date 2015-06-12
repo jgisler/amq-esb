@@ -1,4 +1,4 @@
-package org.gislers.esb.publisher;
+package org.gislers.esb.product.publisher;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;

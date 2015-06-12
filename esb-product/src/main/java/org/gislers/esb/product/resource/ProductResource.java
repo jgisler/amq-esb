@@ -1,6 +1,6 @@
-package org.gislers.esb.resource;
+package org.gislers.esb.product.resource;
 
-import org.gislers.esb.publisher.ProductMessagePublisher;
+import org.gislers.esb.product.publisher.ProductMessagePublisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
