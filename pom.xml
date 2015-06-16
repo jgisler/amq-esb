@@ -17,6 +17,7 @@
 
     <modules>
         <module>esb-product</module>
+        <module>product-consumers</module>
     </modules>
 
     <build>

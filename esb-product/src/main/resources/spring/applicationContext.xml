@@ -7,13 +7,13 @@
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
                            http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
 
-    <context:component-scan base-package="com.nike.digital.foundation.esb.product"/>
+    <context:component-scan base-package="org.gislers.esb.product"/>
 
     <bean id="pooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory" destroy-method="stop">
         <property name="connectionFactory">
             <bean class="org.apache.activemq.ActiveMQConnectionFactory">
                 <property name="brokerURL">
-                    <value>tcp://localhost:61616</value>
+                    <value>failover:(tcp://localhost:61616,tcp://localhost:61626)</value>
                 </property>
             </bean>
         </property>

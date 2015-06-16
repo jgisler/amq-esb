@@ -3,7 +3,7 @@ package org.gislers.esb.product.publisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -15,7 +15,7 @@ import java.util.UUID;
 /**
  * Created by jgisle on 6/10/15.
  */
-@Service
+@Component
 public class ProductMessagePublisher {
 
     @Autowired
