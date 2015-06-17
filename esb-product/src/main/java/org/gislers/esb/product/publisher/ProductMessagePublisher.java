@@ -19,12 +19,12 @@ import java.util.UUID;
 public class ProductMessagePublisher {
 
     @Autowired
-    private JmsTemplate jmsTemplate;
+    private JmsTemplate inboundProductNotifyTemplate;
 
     public UUID sendMessage(final HttpHeaders httpHeaders, final String message) {
 
         final UUID transactionId = UUID.randomUUID();
-        jmsTemplate.send(
+        inboundProductNotifyTemplate.send(
                 new MessageCreator() {
                     @Override
                     public Message createMessage(Session session) throws JMSException {
