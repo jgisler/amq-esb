@@ -13,14 +13,14 @@
 
     <context:component-scan base-package="org.gislers.esb.product"/>
 
-    <bean id="pooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory" destroy-method="stop">
-        <property name="connectionFactory">
-            <bean class="org.apache.activemq.ActiveMQConnectionFactory">
-                <property name="brokerURL">
-                    <value>failover:(tcp://localhost:61616,tcp://localhost:61626)</value>
-                </property>
-            </bean>
+    <bean id="amqCxF" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL">
+            <value>failover:(tcp://localhost:61616,tcp://localhost:61626)</value>
         </property>
+    </bean>
+
+    <bean id="pooledCxF" class="org.apache.activemq.pool.PooledConnectionFactory" destroy-method="stop">
+        <property name="connectionFactory" ref="amqCxF"/>
         <property name="maxConnections" value="20"/>
     </bean>
 
@@ -28,45 +28,30 @@
     <amq:topic id="product.esb.outbound.topic" physicalName="outbound.esb.product.info.topic"/>
 
     <bean id="inboundProductNotifyTemplate" class="org.springframework.jms.core.JmsTemplate">
-        <property name="connectionFactory" ref="pooledConnectionFactory"/>
+        <property name="connectionFactory" ref="pooledCxF"/>
         <property name="defaultDestination" ref="product.esb.inbound.queue"/>
     </bean>
 
     <bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
-        <property name="connectionFactory" ref="pooledConnectionFactory"/>
+        <property name="connectionFactory" ref="pooledCxF"/>
     </bean>
 
     <camel:camelContext>
-        <camel:jmxAgent createConnector="true"/>
+        <camel:jmxAgent id="camelJmx" createConnector="true"/>
         <camel:route>
             <camel:from uri="activemq:queue:product.esb.inbound.queue"/>
-            <camel:to uri="activemq:queue:product.esb.outbound.topic"/>
+            <camel:to uri="activemq:topic:product.esb.outbound.topic"/>
         </camel:route>
     </camel:camelContext>
 
+    <jms:listener-container acknowledge="transacted" connection-factory="pooledCxF" client-id="consumerA"
+                            cache="connection" destination-type="durableTopic">
+        <jms:listener destination="product.esb.outbound.topic" ref="consumerA" method="onMessage"/>
+    </jms:listener-container>
 
-    <jms:annotation-driven/>
-
-    <bean id="jmsListenerContainerFactory" class="org.springframework.jms.config.DefaultJmsListenerContainerFactory">
-        <property name="connectionFactory" ref="pooledConnectionFactory"/>
-        <property name="destinationResolver" ref="destinationResolver"/>
-        <property name="concurrency" value="3-10"/>
-    </bean>
-
-
-    <bean id="productNotificationListener" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
-        <!-- never use concurrentConsumers with topics ! -->
-        <property name="concurrentConsumers" value="1"/>
-        <property name="connectionFactory" ref="pooledConnectionFactory"/>
-        <property name="destination" ref="product.esb.inbound.queue"/>
-        <property name="messageListener" ref="myMessageListener">
-        <property name="sessionTransacted" value="true">
-        <!-- Specify topic style publish/subscribe -->
-        <property name="pubSubDomain" value="true">
-        <!-- Will guaranty that we receive messages in queue after broker goes down -->
-        <property name="subscriptionDurable" value="true">
-        <property name="clientId" value="myApp">
-        <property name="durableSubscriptionName" value="myApp">
-    </bean>
+    <jms:listener-container acknowledge="transacted" connection-factory="pooledCxF" client-id="consumerB"
+                            cache="connection" destination-type="durableTopic">
+        <jms:listener destination="product.esb.outbound.topic" ref="consumerB" method="onMessage"/>
+    </jms:listener-container>
 
 </beans>
