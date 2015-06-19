@@ -49,26 +49,4 @@
         <jms:listener destination="product.error" ref="productErrorConsumer" method="onMessage"/>
     </jms:listener-container>
 
-    <!--Product V3-->
-    <jms:listener-container acknowledge="transacted" connection-factory="pooledCxF" client-id="consumerA"
-                            cache="connection" destination-type="durableTopic">
-        <jms:listener destination="product.out.v3" ref="consumerA" method="onMessage"/>
-    </jms:listener-container>
-
-    <jms:listener-container acknowledge="transacted" connection-factory="pooledCxF" client-id="consumerB"
-                            cache="connection" destination-type="durableTopic">
-        <jms:listener destination="product.out.v3" ref="consumerB" method="onMessage"/>
-    </jms:listener-container>
-
-    <!--Product V4-->
-    <jms:listener-container acknowledge="transacted" connection-factory="pooledCxF" client-id="consumerC"
-                            cache="connection" destination-type="durableTopic">
-        <jms:listener destination="product.out.v4" ref="consumerC" method="onMessage"/>
-    </jms:listener-container>
-
-    <jms:listener-container acknowledge="transacted" connection-factory="pooledCxF" client-id="consumerD"
-                            cache="connection" destination-type="durableTopic">
-        <jms:listener destination="product.out.v4" ref="consumerD" method="onMessage"/>
-    </jms:listener-container>
-
 </beans>
