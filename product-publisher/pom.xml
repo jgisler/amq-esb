@@ -11,7 +11,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>esb-product</artifactId>
+    <artifactId>product-publisher</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
@@ -20,11 +20,6 @@
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.activemq.tooling</groupId>
-                <artifactId>activemq-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

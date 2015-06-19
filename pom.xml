@@ -16,11 +16,19 @@
     </properties>
 
     <modules>
-        <module>esb-product</module>
+        <module>product-publisher</module>
         <module>product-consumers</module>
     </modules>
 
     <build>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.activemq.tooling</groupId>
+                <artifactId>activemq-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+
         <pluginManagement>
             <plugins>
                 <plugin>
