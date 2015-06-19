@@ -1,4 +1,4 @@
-package org.gislers.esb.product.consumers.v4;
+package org.gislers.esb.product.consumers.v3;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,17 +12,18 @@ import java.util.Map;
  * Created by jgisle on 6/18/15.
  */
 @Service
-public class ConsumerServiceC {
+public class ProductConsumerA {
 
-    private static final Logger logger = LoggerFactory.getLogger(ConsumerServiceC.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProductConsumerA.class);
 
     @JmsListener(
-            id = "consumerServiceC",
-            destination = "product.out.v4",
-            concurrency = "1",
+            id = "productConsumerA",
+            containerFactory = "productListenerContainerFactory",
+            destination = "product.out.v3",
+            concurrency = "5",
             subscription = "durableTopic"
     )
-    public void processOrder(String message, @Headers Map<String, Object> headerMap) {
+    public void process(String message, @Headers Map<String, Object> headerMap) {
 
         StringBuilder sb = new StringBuilder();
         for (String key : headerMap.keySet()) {

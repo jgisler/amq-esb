@@ -15,7 +15,7 @@
 
     <bean id="amqCxF" class="org.apache.activemq.ActiveMQConnectionFactory">
         <property name="brokerURL">
-            <value>failover:(tcp://localhost:61616,tcp://localhost:61626)</value>
+            <value>failover:(tcp://localhost:61616,tcp://localhost:61617)</value>
         </property>
     </bean>
 
@@ -42,11 +42,4 @@
         <camel:contextScan/>
         <camel:jmxAgent id="camelJmx" createConnector="true"/>
     </camel:camelContext>
-
-    <!--Product Errors-->
-    <jms:listener-container acknowledge="transacted" connection-factory="pooledCxF" client-id="errorConsumer"
-                            cache="connection" destination-type="queue">
-        <jms:listener destination="product.error" ref="productErrorConsumer" method="onMessage"/>
-    </jms:listener-container>
-
 </beans>

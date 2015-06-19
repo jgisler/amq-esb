@@ -1,5 +1,6 @@
 package org.gislers.esb.product;
 
+import org.gislers.esb.product.config.AppConfig;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 

@@ -1,4 +1,4 @@
-package org.gislers.esb.product;
+package org.gislers.esb.product.config;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.slf4j.Logger;
@@ -23,17 +23,26 @@ public class AppConfig {
     public ActiveMQConnectionFactory connectionFactory() {
         logger.info("connectionFactory()");
         ActiveMQConnectionFactory activeMQConnectionFactory = new ActiveMQConnectionFactory();
-        activeMQConnectionFactory.setBrokerURL("failover:(tcp://localhost:61616,tcp://localhost:61626)");
+        activeMQConnectionFactory.setBrokerURL("failover:(tcp://localhost:61616,tcp://localhost:61617)");
         return activeMQConnectionFactory;
     }
 
     @Bean
-    public DefaultJmsListenerContainerFactory jmsListenerContainerFactory() {
-        logger.info("jmsListenerContainerFactory()");
+    public DefaultJmsListenerContainerFactory productListenerContainerFactory() {
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory());
         factory.setCacheLevelName("CACHE_CONNECTION");
         factory.setPubSubDomain(true);
+        factory.setConcurrency("1");
+        return factory;
+    }
+
+    @Bean
+    public DefaultJmsListenerContainerFactory errorListenerContainerFactory() {
+        DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory());
+        factory.setCacheLevelName("CACHE_CONNECTION");
+        factory.setPubSubDomain(false);
         factory.setConcurrency("1");
         return factory;
     }

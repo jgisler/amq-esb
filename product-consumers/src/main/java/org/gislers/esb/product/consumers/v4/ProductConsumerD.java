@@ -12,17 +12,18 @@ import java.util.Map;
  * Created by jgisle on 6/18/15.
  */
 @Service
-public class ConsumerServiceD {
+public class ProductConsumerD {
 
-    private static final Logger logger = LoggerFactory.getLogger(ConsumerServiceD.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProductConsumerD.class);
 
     @JmsListener(
-            id = "consumerServiceD",
+            id = "productConsumerD",
+            containerFactory = "productListenerContainerFactory",
             destination = "product.out.v4",
-            concurrency = "1",
+            concurrency = "5",
             subscription = "durableTopic"
     )
-    public void processOrder(String message, @Headers Map<String, Object> headerMap) {
+    public void process(String message, @Headers Map<String, Object> headerMap) {
 
         StringBuilder sb = new StringBuilder();
         for (String key : headerMap.keySet()) {
