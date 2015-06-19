@@ -1,8 +1,6 @@
 package org.gislers.esb.product.consumers;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -10,29 +8,25 @@ import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
 /**
- * Created by jgisle on 6/18/15.
+ * Created by jgisle on 6/19/15.
  */
-@Component("consumerB")
-public class ConsumerB implements MessageListener {
+public abstract class BaseProductConsumer implements MessageListener {
 
-    private static final Logger logger = LoggerFactory.getLogger(ConsumerB.class);
+    protected abstract Logger getLogger();
 
     @Override
     public void onMessage(Message message) {
-        processMessage(message);
-    }
-
-    void processMessage(Message message) {
         try {
             String messageVersion = message.getStringProperty("MESSAGE_VERSION");
             String environment = message.getStringProperty("ENV");
-            logger.info(
+            getLogger().info(
                     "messageVersion=" + messageVersion + "&" +
                             "env=" + environment
             );
 
             TextMessage textMessage = (TextMessage) message;
-            logger.info(textMessage.getText());
+            getLogger().info(textMessage.getText());
+            message.acknowledge();
         } catch (JMSException e) {
             throw new RuntimeException(e);
         }
