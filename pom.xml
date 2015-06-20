@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <org.springframework-version>4.1.6.RELEASE</org.springframework-version>
         <activemq.version>5.11.1</activemq.version>
         <camel.version>2.15.2</camel.version>
