@@ -10,11 +10,10 @@
                            http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
     <context:component-scan base-package="org.gislers.esb.product"/>
+    <context:property-placeholder location="classpath:jms.properties"/>
 
     <bean id="amqCxF" class="org.apache.activemq.ActiveMQConnectionFactory">
-        <property name="brokerURL">
-            <value>failover:(tcp://localhost:61616,tcp://localhost:61617)</value>
-        </property>
+        <property name="brokerURL" value="${broker.url}" />
     </bean>
 
     <bean id="pooledCxF" class="org.apache.activemq.pool.PooledConnectionFactory" destroy-method="stop">
