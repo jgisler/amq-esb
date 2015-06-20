@@ -11,6 +11,7 @@ import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.connection.CachingConnectionFactory;
 
 import javax.jms.JMSException;
+import javax.jms.Session;
 
 /**
  * Created by jgisle on 6/18/15.
@@ -46,7 +47,7 @@ public class AppConfig {
         connectionFactory.setCacheConsumers( true );
         connectionFactory.setReconnectOnException(true);
         connectionFactory.setTargetConnectionFactory(connectionFactory());
-        connectionFactory.setClientId( "productConnectionFactory" );
+        connectionFactory.setClientId( "productClient" );
         return connectionFactory;
     }
 
@@ -58,6 +59,7 @@ public class AppConfig {
         factory.setPubSubDomain(true);
         factory.setSubscriptionDurable(true);
         factory.setConcurrency("1");
+        factory.setSessionAcknowledgeMode(Session.AUTO_ACKNOWLEDGE);
         return factory;
     }
 

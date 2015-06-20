@@ -27,7 +27,7 @@ public class ProductConsumerA extends BaseConsumer {
             containerFactory = "durableJmsListenerContainerFactory",
             destination = "product.out.v3",
             concurrency = "1",
-            subscription = "productConsumerA"
+            subscription = "product.consumer.A"
     )
     public void process(String message, @Headers Map<String, Object> headerMap) {
         super.process(message, headerMap);
