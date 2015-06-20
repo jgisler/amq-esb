@@ -18,7 +18,7 @@
 
     <bean id="pooledCxF" class="org.apache.activemq.pool.PooledConnectionFactory" destroy-method="stop">
         <property name="connectionFactory" ref="amqCxF"/>
-        <property name="maxConnections" value="20"/>
+        <property name="maxConnections" value="40"/>
     </bean>
 
     <amq:queue id="product.in" physicalName="product.in"/>

@@ -72,7 +72,6 @@
             <artifactId>camel-spring</artifactId>
         </dependency>
 
-
         <!--ActiveMQ-->
         <dependency>
             <groupId>org.apache.activemq</groupId>

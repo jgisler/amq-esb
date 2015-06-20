@@ -19,6 +19,7 @@
     <modules>
         <module>product-publisher</module>
         <module>product-consumers</module>
+        <module>esb-simulator</module>
     </modules>
 
     <build>
