@@ -72,12 +72,15 @@
                 <artifactId>camel-core</artifactId>
                 <version>${camel.version}</version>
             </dependency>
-
-            <!--Camel-Spring-->
             <dependency>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-spring</artifactId>
-                <version>2.15.2</version>
+                <version>${camel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-spring-javaconfig</artifactId>
+                <version>${camel.version}</version>
             </dependency>
 
             <!--ActiveMQ-->
