@@ -20,14 +20,14 @@ public class MessageTracker {
         trackingMap = new ConcurrentHashMap<String, AtomicInteger>();
     }
 
-    public void recordMessageSent( String uuid ) {
+    public synchronized void recordMessageSent(String uuid) {
         if(trackingMap.containsKey(uuid)) {
             throw new RuntimeException("Duplicate uuids");
         }
         trackingMap.put( uuid, new AtomicInteger(1) );
     }
 
-    public void recordMessageRecieved( String uuid ) {
+    public synchronized void recordMessageRecieved(String uuid) {
         if( !trackingMap.containsKey(uuid) ) {
             throw new RuntimeException("Missing uuid");
         }

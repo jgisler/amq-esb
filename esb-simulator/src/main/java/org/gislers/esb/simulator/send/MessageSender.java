@@ -1,5 +1,6 @@
 package org.gislers.esb.simulator.send;
 
+import org.gislers.esb.simulator.MessageTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class MessageSender {
     private static final Logger logger = LoggerFactory.getLogger( MessageSender.class );
 
     @Autowired
+    private MessageTracker messageTracker;
+
+    @Autowired
     private ProductPublisherClient productClient;
 
     private Random random;
@@ -28,15 +32,17 @@ public class MessageSender {
     }
 
     public void sendRandomMessage() {
-
+        String uuid = UUID.randomUUID().toString();
+        String randomVersion = getRandomVersion();
         long start = System.currentTimeMillis();
         String response = productClient.sendProduct(
                 "dev",
-                getRandomVersion(),
-                UUID.randomUUID().toString(),
+                randomVersion,
+                uuid,
                 "{ \"product\"=\"test product\" }"
         );
         long end = System.currentTimeMillis();
+        messageTracker.recordMessageSent(uuid);
         logger.info( response + " : " + (end-start) + "ms" );
     }
 
