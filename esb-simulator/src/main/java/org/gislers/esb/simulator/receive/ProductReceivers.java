@@ -6,10 +6,7 @@ import org.springframework.stereotype.Component;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
-import java.util.UUID;
 
 /**
  * Created by jim on 6/21/2015.
@@ -23,29 +20,29 @@ public class ProductReceivers {
 
     @POST
     @Path("/consumerA")
-    public Response receiverA(@Context HttpHeaders httpHeaders, String message) {
-        return revieveMessage(httpHeaders.getRequestHeader("TRANSACTION_ID").get(0));
+    public Response receiverA(String message) {
+        return receiveMessage(message);
     }
 
     @POST
     @Path("/consumerB")
-    public Response receiverB(@Context HttpHeaders httpHeaders, String message) {
-       return revieveMessage( httpHeaders.getRequestHeader("TRANSACTION_ID").get(0) );
+    public Response receiverB(String message) {
+        return receiveMessage(message);
     }
 
     @POST
     @Path("/consumerC")
-    public Response receiverC(@Context HttpHeaders httpHeaders, String message) {
-        return revieveMessage( httpHeaders.getRequestHeader("TRANSACTION_ID").get(0) );
+    public Response receiverC(String message) {
+        return receiveMessage(message);
     }
 
     @POST
     @Path("/consumerD")
-    public Response receiverD(@Context HttpHeaders httpHeaders, String message) {
-        return revieveMessage( httpHeaders.getRequestHeader("TRANSACTION_ID").get(0) );
+    public Response receiverD(String message) {
+        return receiveMessage(message);
     }
 
-    Response revieveMessage( String transactionId ) {
+    Response receiveMessage(String transactionId) {
         messageTracker.recordMessageRecieved(transactionId);
         return Response.ok().build();
     }

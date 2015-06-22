@@ -1,11 +1,13 @@
 package org.gislers.esb.simulator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by jim on 6/21/2015.
@@ -13,32 +15,30 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component
 public class MessageTracker {
 
-    private ConcurrentMap<String, AtomicInteger> trackingMap;
+    private static final Logger logger = LoggerFactory.getLogger(MessageTracker.class);
+
+    private ConcurrentMap<String, AtomicLong> trackingMap;
 
     @PostConstruct
     public void init() {
-        trackingMap = new ConcurrentHashMap<String, AtomicInteger>();
+        trackingMap = new ConcurrentHashMap<String, AtomicLong>();
     }
 
     public synchronized void recordMessageSent(String uuid) {
-        if(trackingMap.containsKey(uuid)) {
-            throw new RuntimeException("Duplicate uuids");
-        }
-        trackingMap.put( uuid, new AtomicInteger(1) );
+        trackingMap.put(uuid, new AtomicLong(System.currentTimeMillis()));
     }
 
     public synchronized void recordMessageRecieved(String uuid) {
-        if( !trackingMap.containsKey(uuid) ) {
-            throw new RuntimeException("Missing uuid");
-        }
-        trackingMap.get(uuid).getAndIncrement();
+        trackingMap.get(uuid).getAndSet(
+                System.currentTimeMillis() - trackingMap.get(uuid).get()
+        );
     }
 
-    public void verifyTransactions() {
+    public String verifyTransactions() {
+        StringBuilder sb = new StringBuilder();
         for( String uuid : trackingMap.keySet() ) {
-            if( trackingMap.get(uuid).get() != 2 ) {
-                throw new RuntimeException( "transaction verification failed: " + uuid );
-            }
+            sb.append(uuid).append("=").append(trackingMap.get(uuid).get()).append("ms").append("\n");
         }
+        return sb.toString();
     }
 }

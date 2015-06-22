@@ -4,11 +4,12 @@ import org.gislers.esb.simulator.MessageTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.task.TaskRejectedException;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Random;
-import java.util.UUID;
 
 /**
  * Created by jim on 6/20/2015.
@@ -24,6 +25,9 @@ public class MessageSender {
     @Autowired
     private ProductPublisherClient productClient;
 
+    @Autowired
+    private ThreadPoolTaskExecutor taskExecutor;
+
     private Random random;
 
     @PostConstruct
@@ -31,28 +35,41 @@ public class MessageSender {
         random = new Random( System.currentTimeMillis() );
     }
 
-    public void sendRandomMessage() {
-        String uuid = UUID.randomUUID().toString();
+    public void sendMessages(int messageCount) {
+
+        for (int i = 0; i < messageCount; i++) {
+
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    sendRandomMessage();
+                }
+            };
+            try {
+                taskExecutor.execute(runnable);
+            } catch (TaskRejectedException e) {
+                try {
+                    Thread.sleep(100l);
+                } catch (InterruptedException ex) {
+                    logger.error(e.getMessage());
+                }
+                taskExecutor.execute(runnable);
+            }
+
+            logger.info("Messages sent: " + (i + 1));
+        }
+    }
+
+    void sendRandomMessage() {
         String randomVersion = getRandomVersion();
-        long start = System.currentTimeMillis();
-        String response = productClient.sendProduct(
-                "dev",
-                randomVersion,
-                uuid,
-                "{ \"product\"=\"test product\" }"
-        );
-        long end = System.currentTimeMillis();
-        messageTracker.recordMessageSent(uuid);
-        logger.info( response + " : " + (end-start) + "ms" );
+        String response = productClient.sendProduct(randomVersion, "{ \"product\"=\"test product\" }");
+        messageTracker.recordMessageSent(response);
     }
 
     String getRandomVersion() {
-        int randomInt = random.nextInt(3);
+        int randomInt = random.nextInt(2);
 
         if( randomInt == 0 ) {
-            return "1.0";
-        }
-        else if( randomInt == 1 ) {
             return "2.0";
         }
         else {
