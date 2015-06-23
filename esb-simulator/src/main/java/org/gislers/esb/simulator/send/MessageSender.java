@@ -42,38 +42,31 @@ public class MessageSender {
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
-                    sendRandomMessage();
+                    productClient.sendProduct(getRandomVersion(), "{ \"product\"=\"test product\" }");
                 }
             };
+
             try {
                 taskExecutor.execute(runnable);
             } catch (TaskRejectedException e) {
                 try {
-                    Thread.sleep(100l);
+                    Thread.sleep(200l);
                 } catch (InterruptedException ex) {
                     logger.error(e.getMessage());
                 }
                 taskExecutor.execute(runnable);
             }
-
-            logger.info("Messages sent: " + (i + 1));
         }
-    }
-
-    void sendRandomMessage() {
-        String randomVersion = getRandomVersion();
-        String response = productClient.sendProduct(randomVersion, "{ \"product\"=\"test product\" }");
-        messageTracker.recordMessageSent(response);
     }
 
     String getRandomVersion() {
-        int randomInt = random.nextInt(2);
-
+        int randomInt = random.nextInt(3);
         if( randomInt == 0 ) {
             return "2.0";
-        }
-        else {
+        } else if (randomInt == 1) {
             return "4.0";
+        } else {
+            return "1.0";
         }
     }
 }

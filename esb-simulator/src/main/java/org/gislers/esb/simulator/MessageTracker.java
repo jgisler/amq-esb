@@ -28,16 +28,14 @@ public class MessageTracker {
         trackingMap.put(uuid, new AtomicLong(System.currentTimeMillis()));
     }
 
-    public synchronized void recordMessageRecieved(String uuid) {
-        trackingMap.get(uuid).getAndSet(
-                System.currentTimeMillis() - trackingMap.get(uuid).get()
-        );
+    public synchronized long getSentTime(String uuid) {
+        return trackingMap.get(uuid).get();
     }
 
     public String verifyTransactions() {
         StringBuilder sb = new StringBuilder();
         for( String uuid : trackingMap.keySet() ) {
-            sb.append(uuid).append("=").append(trackingMap.get(uuid).get()).append("ms").append("\n");
+            sb.append(uuid).append("=").append(trackingMap.get(uuid).get()).append("ms").append("<br>");
         }
         return sb.toString();
     }

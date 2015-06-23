@@ -1,5 +1,6 @@
 package org.gislers.esb.product.consumers.error;
 
+import com.sun.jersey.api.client.ClientResponse;
 import org.gislers.esb.product.consumers.BaseConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,11 +18,6 @@ public class ErrorConsumer extends BaseConsumer {
 
     private static final Logger logger = LoggerFactory.getLogger(ErrorConsumer.class);
 
-    @Override
-    public Logger getLogger() {
-        return logger;
-    }
-
     @JmsListener(
             id = "errorConsumer",
             containerFactory = "errorListenerContainerFactory",
@@ -30,6 +26,9 @@ public class ErrorConsumer extends BaseConsumer {
             subscription = "queue"
     )
     public void process(String message, @Headers Map<String, Object> headerMap) {
-        super.process(message, headerMap);
+        ClientResponse clientResponse = getRestClient().sendToErrorConsumer(buildRequest(headerMap, message));
+        if (clientResponse.getStatus() != 200) {
+            logger.error("Send failed");
+        }
     }
 }

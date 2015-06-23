@@ -25,7 +25,7 @@ public class AppConfig {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         taskExecutor.setCorePoolSize(20);
         taskExecutor.setMaxPoolSize(40);
-        taskExecutor.setQueueCapacity(100);
+        taskExecutor.setQueueCapacity(0);
         return taskExecutor;
     }
 }

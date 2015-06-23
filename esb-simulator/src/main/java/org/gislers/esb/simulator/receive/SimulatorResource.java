@@ -27,6 +27,12 @@ public class SimulatorResource {
     @Path("/start/{messageCount}")
     public Response startTest(@PathParam("messageCount") int messageCount) {
         messageSender.sendMessages(messageCount);
+        return Response.ok().build();
+    }
+
+    @GET
+    @Path("/results")
+    public Response showResult() {
         return Response.ok(messageTracker.verifyTransactions()).build();
     }
 }

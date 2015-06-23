@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.Map;
 
 /**
  * Created by jgisle on 6/22/15.
@@ -26,24 +27,34 @@ public class RestClient {
         webResource = jerseyClient.resource(receiverBaseUrl);
     }
 
-    public ClientResponse sendToConsumerA(String uuid) {
-        return send("/consumerA", uuid);
+    public ClientResponse sendToConsumerA(ProductRequest productRequest) {
+        return send("/consumerA", productRequest);
     }
 
-    public ClientResponse sendToConsumerB(String uuid) {
-        return send("/consumerB", uuid);
+    public ClientResponse sendToConsumerB(ProductRequest productRequest) {
+        return send("/consumerB", productRequest);
     }
 
-    public ClientResponse sendToConsumerC(String uuid) {
-        return send("/consumerC", uuid);
+    public ClientResponse sendToConsumerC(ProductRequest productRequest) {
+        return send("/consumerC", productRequest);
     }
 
-    public ClientResponse sendToConsumerD(String uuid) {
-        return send("/consumerD", uuid);
+    public ClientResponse sendToConsumerD(ProductRequest productRequest) {
+        return send("/consumerD", productRequest);
     }
 
-    ClientResponse send(String path, String uuid) {
-        return webResource.path(path)
-                .post(ClientResponse.class, uuid);
+    public ClientResponse sendToErrorConsumer(ProductRequest productRequest) {
+        return send("/error", productRequest);
+    }
+
+    ClientResponse send(String path, ProductRequest productRequest) {
+        WebResource.Builder builder = webResource.path(path).getRequestBuilder();
+
+        Map<String, String> headerMap = productRequest.getHeaders();
+        for (String key : headerMap.keySet()) {
+            builder = builder.header(key, headerMap.get(key));
+        }
+
+        return builder.post(ClientResponse.class, productRequest.getBody());
     }
 }
