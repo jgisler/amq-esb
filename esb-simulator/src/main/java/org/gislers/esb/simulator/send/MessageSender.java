@@ -46,16 +46,29 @@ public class MessageSender {
                 }
             };
 
-            try {
-                taskExecutor.execute(runnable);
-            } catch (TaskRejectedException e) {
-                try {
-                    Thread.sleep(200l);
-                } catch (InterruptedException ex) {
-                    logger.error(e.getMessage());
-                }
-                taskExecutor.execute(runnable);
+            // retry loop
+            int tryCount = 0;
+            while (!execute(runnable)) {
+                hitSnooze(++tryCount);
             }
+        }
+    }
+
+    void hitSnooze(int tryCount) {
+        long snoozeTime = 20l;
+        try {
+            Thread.sleep(tryCount * snoozeTime);
+        } catch (InterruptedException e) {
+            logger.info(e.getMessage());
+        }
+    }
+
+    boolean execute(Runnable runnable) {
+        try {
+            taskExecutor.execute(runnable);
+            return true;
+        } catch (TaskRejectedException e) {
+            return false;
         }
     }
 

@@ -29,6 +29,9 @@ public class ErrorConsumer extends BaseConsumer {
         ClientResponse clientResponse = getRestClient().sendToErrorConsumer(buildRequest(headerMap, message));
         if (clientResponse.getStatus() != 200) {
             logger.error("Send failed");
+        } else {
+            String txId = (String) headerMap.get("TRANSACTION_ID");
+            logger.info(String.format("Processing txId '%s'", txId));
         }
     }
 }
